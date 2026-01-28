@@ -1,0 +1,83 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+#mode-select button {
+    font-size: 18px;
+    padding: 12px 24px;
+    margin: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+}
+
+#mode-select button:hover {
+    background: #2980b9;
+}
+
+#game-area {
+    margin-top: 20px;
+}
+
+#status {
+    font-size: 24px;
+    margin: 20px 0;
+    color: #2c3e50;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border: 2px solid #2c3e50;
+    font-size: 48px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cell:hover {
+    background-color: #eaf2f8;
+}
+
+#resetBtn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#resetBtn:hover {
+    background: #219653;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крестики-нолики с AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Крестики-нолики</h1>
+
+        <!-- Выбор режима -->
+        <div id="mode-select">
+            <button onclick="startGame('1p')">Играть против AI</button>
+            <button onclick="startGame('2p')">2 игрока</button>
+        </div>
+
+        <div id="game-area" style="display: none;">
+            <div id="status">Ходит: <span id="player">X</span></div>
+            <div class="board" id="board"></div>
+            <button id="resetBtn">Новая игра</button>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = null;
+
+        function startGame(mode) {
+            currentMode = mode;
+            fetch('/new_game', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: mode })
+            }).then(() => {
+                document.getElementById('mode-select').style.display = 'none';
+                document.getElementById('game-area').style.display = 'block';
+                document.getElementById('player').textContent = 'X';
+                initBoard();
+            });
+        }
+
+        function initBoard() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.index = i;
+                cell.addEventListener('click', () => handleCellClick(i));
+                boardEl.appendChild(cell);
+            }
+        }
+
+        function renderBoard(board) {
+            for (let i = 0; i < 9; i++) {
+                document.querySelector(`.cell[data-index="${i}"]`).textContent = board[i];
+            }
+        }
+
+        async function handleCellClick(index) {
+            const response = await fetch('/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cell: index })
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            renderBoard(data.board);
+
+            if (data.status === 'win') {
+                document.getElementById('status').textContent = `Победил: ${data.winner}!`;
+                disableCells();
+            } else if (data.status === 'draw') {
+                document.getElementById('status').textContent = 'Ничья!';
+                disableCells();
+            } else {
+                if (currentMode === '2p') {
+                    document.getElementById('player').textContent = data.current_player;
+                } else {
+                    // В режиме 1p после хода человека идёт ход AI
+                    // Статус остаётся "Ходит: X", потому что AI ходит автоматически
+                    // Ничего не меняем — человек ждёт своей очереди
+                }
+            }
+        }
+
+        function disableCells() {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.style.pointerEvents = 'none';
+            });
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
