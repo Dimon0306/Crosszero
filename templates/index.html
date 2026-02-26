@@ -4,7 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Крестики-нолики с AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- Цвет темы для адресной строки браузера -->
+    <meta name="theme-color" content="#2c3e50">
+    
+    <!-- Иконка для iOS (на всякий случай, хотя вы спрашивали про Android) -->
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+
+    <!-- Ваши существующие стили CSS -->
+    <style>
+        /* ... ваши стили ... */
+        body { font-family: sans-serif; text-align: center; background-color: #f4f4f9; }
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 300px; margin: 20px auto; }
+        .cell { width: 100px; height: 100px; background: white; border: 2px solid #333; font-size: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .cell.taken { cursor: not-allowed; }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; background: #2c3e50; color: white; border: none; border-radius: 5px; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,6 +38,23 @@
             <button id="resetBtn">Новая игра</button>
         </div>
     </div>
+
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/static/sw.js')
+                .then(reg => console.log('Service Worker зарегистрирован!', reg))
+                .catch(err => console.log('Ошибка SW:', err));
+            });
+    
+        }
+    </script>
+    
+    <!-- Ваш существующий JS код игры -->
+    <script>
+        // ... весь ваш текущий JavaScript код игры ...
+        // Убедитесь, что он подключен здесь или внутри тега <script>
+    </script>
 
     <script>
         let currentMode = null;
@@ -101,4 +134,5 @@
         });
     </script>
 </body>
+
 </html>
